@@ -9,12 +9,16 @@ router = APIRouter(prefix="/shipment", tags=["Shipment"])
 
 
 @router.get("/", response_model=ShipmentRead)
-async def get_shipment(id: UUID,_:SellerDep, service: ServiceDep):
+async def get_shipment(id: UUID,seller:SellerDep, service: ServiceDep):
     shipment = await service.get(id)
     if shipment is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND, detail="Given shipment ID not found"
         )
+    if seller.id != shipment.seller_id:
+        raise HTTPException(
+                    status_code=status.HTTP_403_FORBIDDEN, detail="Not the assigned Seller"
+                )
     return shipment
 
 
