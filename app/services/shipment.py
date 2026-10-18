@@ -54,6 +54,11 @@ class ShipmentService(BaseService):
 
     async def update(self,id:UUID,shipment_update:ShipmentUpdate,partner:DeliveryPartner)->Shipment:
         shipment=await self.get(id)
+        if shipment is None:
+            raise HTTPException(
+            status_code=404,
+            detail="Shipment not found",
+            )
         if shipment.delivery_partner_id != partner.id:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
@@ -78,7 +83,11 @@ class ShipmentService(BaseService):
 
     async def cancel(self,id:UUID,seller:Seller)->Shipment:
         shipment=await self.get(id)
-
+        if shipment is None:
+            raise HTTPException(
+            status_code=404,
+            detail="Shipment not found",
+            )
         if shipment.seller_id != seller.id:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
