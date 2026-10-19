@@ -35,9 +35,7 @@ SellerServiceDep = Annotated[SellerService, Depends(get_seller_service)]
 
 
 async def _get_access_token(token: str):
-    print("TOKEN RECEIVED:", repr(token))
     token = token.split(",")[0].strip()
-    print("CLEAN TOKEN:", repr(token))
 
     data = decode_access_token(token)
 
@@ -46,7 +44,6 @@ async def _get_access_token(token: str):
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid or Expired access token",
         )
-    print("DECODED:", data)
     return data
 
 
